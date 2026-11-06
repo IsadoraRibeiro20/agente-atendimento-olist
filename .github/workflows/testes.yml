@@ -1,0 +1,18 @@
+# Integração Contínua: a cada push, o GitHub roda os testes automaticamente.
+# O selo verde no README mostra que o projeto está funcionando.
+name: testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: pytest -v

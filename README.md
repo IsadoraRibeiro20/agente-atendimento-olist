@@ -1,7 +1,7 @@
 # 🛒 Agente de Atendimento e Análise com IA — Olist
 
-![testes](https://github.com/SEU_USUARIO/agente-atendimento-olist/actions/workflows/testes.yml/badge.svg)
-[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SEU_USUARIO/agente-atendimento-olist/blob/main/notebooks/demo_colab.ipynb)
+![testes](https://github.com/IsadoraRibeiro20/agente-atendimento-olist/actions/workflows/testes.yml/badge.svg)
+[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IsadoraRibeiro20/agente-atendimento-olist/blob/main/notebooks/demo_colab.ipynb)
 
 Agente de IA que **atende clientes, prevê atrasos, concilia pagamentos, categoriza
 reclamações e gera relatórios** sobre ~100 mil pedidos reais (anonimizados) do
@@ -59,7 +59,7 @@ Clique no selo **Abrir no Colab** acima e siga as células.
 
 ### Opção 2 — No seu computador
 ```bash
-git clone https://github.com/SEU_USUARIO/agente-atendimento-olist.git
+git clone https://github.com/IsadoraRibeiro20/agente-atendimento-olist.git
 cd agente-atendimento-olist
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"

@@ -19,7 +19,8 @@ from google import genai
 from google.genai import types
 
 from . import ferramentas
-from .config import MODELO_GEMINI, obter_chave_gemini
+from .config import obter_chave_gemini
+from .ia import gerar_conteudo
 
 INSTRUCOES = """Você é a assistente virtual de atendimento e análise de uma loja de e-commerce brasileira.
 Responda sempre em português do Brasil, de forma cordial e objetiva.
@@ -63,12 +64,15 @@ class Agente:
             return {"erro": f"{type(e).__name__}: {e}"}
 
     def perguntar(self, mensagem: str) -> str:
+        tamanho_antes = len(self.historico)
         self.historico.append(types.Content(role="user", parts=[types.Part(text=mensagem)]))
 
         for passo in range(1, MAX_PASSOS + 1):
-            resposta = self.cliente.models.generate_content(
-                model=MODELO_GEMINI, contents=self.historico, config=self.config
-            )
+            try:
+                resposta = gerar_conteudo(self.cliente, self.historico, self.config, verbose=self.verbose)
+            except RuntimeError as e:
+                del self.historico[tamanho_antes:]  # desfaz a pergunta não respondida
+                return f"⚠️ {e}"
             conteudo = resposta.candidates[0].content
             self.historico.append(conteudo)
 

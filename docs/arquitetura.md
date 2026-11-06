@@ -54,6 +54,9 @@ derrubar o programa — assim ela pode pedir o dado correto ao usuário.
 - **Classificação em lote**: 1 chamada para N avaliações → economiza cota.
 - **Random Forest com `class_weight="balanced"`**: atrasos são minoria (cerca de 8% dos pedidos); o
   balanceamento evita um modelo que só diz "não atrasa". Métrica: AUC.
+- **Resiliência (`ia.py`)**: erros temporários da API (503 sobrecarga, 429 limite) são
+  repetidos com espera crescente (*backoff exponencial*) e, se persistirem, o agente troca
+  para um modelo reserva. Erros definitivos (ex.: chave inválida) não são repetidos.
 - **Mock da IA nos testes**: testes determinísticos, rápidos e gratuitos.
 
 ## 5. Hipóteses para investigar nos dados reais

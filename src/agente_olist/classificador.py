@@ -9,7 +9,7 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from .config import MODELO_GEMINI
+from .ia import gerar_conteudo
 
 
 class Categoria(str, Enum):
@@ -39,10 +39,10 @@ def classificar_textos(cliente, textos: list[str]) -> list[Classificacao]:
     from google.genai import types
 
     numeradas = "\n".join(f"{i}. {t}" for i, t in enumerate(textos))
-    resposta = cliente.models.generate_content(
-        model=MODELO_GEMINI,
-        contents=PROMPT.format(avaliacoes=numeradas),
-        config=types.GenerateContentConfig(
+    resposta = gerar_conteudo(
+        cliente,
+        PROMPT.format(avaliacoes=numeradas),
+        types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=list[Classificacao],
             temperature=0,

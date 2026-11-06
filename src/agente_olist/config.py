@@ -21,6 +21,12 @@ PASTA_RELATORIOS = Path(os.getenv("OLIST_REPORTS_DIR", RAIZ_PROJETO / "relatorio
 # recente, que faz parte do plano gratuito do Google AI Studio.
 MODELO_GEMINI = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 
+# Modelos usados se o principal estiver sobrecarregado (erro 503) ou no limite (429).
+# Separados por vírgula. O Flash-Lite é mais leve e costuma ter mais disponibilidade.
+MODELOS_RESERVA = [
+    m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-flash-lite-latest").split(",") if m.strip()
+]
+
 
 def obter_chave_gemini() -> str:
     """Busca a chave da API: primeiro nos Secrets do Colab, depois no ambiente."""

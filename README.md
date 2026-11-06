@@ -55,7 +55,7 @@ por isso toda informação numérica vem das ferramentas. Detalhes em [docs/arqu
 ## 🚀 Como rodar
 
 ### Opção 1 — Google Colab (recomendado, nada para instalar)
-Clique no selo **Abrir no Colab** acima e siga as células.
+👉 **[Abrir o notebook no Google Colab](https://colab.research.google.com/github/IsadoraRibeiro20/agente-atendimento-olist/blob/main/notebooks/demo_colab.ipynb)** e siga as células.
 
 ### Opção 2 — No seu computador
 ```bash

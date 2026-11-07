@@ -23,6 +23,14 @@ MODELO_GEMINI = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 
 # Modelos usados se o principal estiver sobrecarregado (erro 503) ou no limite (429).
 # Separados por vírgula. O Flash-Lite é mais leve e costuma ter mais disponibilidade.
+# Tempo máximo (segundos) esperando UMA resposta do Gemini. Em horários de alta
+# demanda o servidor pode "segurar" a requisição por minutos; com limite, cortamos
+# e tentamos de novo / trocamos de modelo.
+TIMEOUT_GEMINI_S = float(os.getenv("GEMINI_TIMEOUT_S", "45"))
+
+# Onde o log de execução é gravado
+PASTA_LOGS = Path(os.getenv("OLIST_LOGS_DIR", RAIZ_PROJETO / "logs"))
+
 MODELOS_RESERVA = [
     m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-flash-lite-latest").split(",") if m.strip()
 ]

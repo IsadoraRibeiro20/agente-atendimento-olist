@@ -22,3 +22,6 @@ relatorios/*
 .vscode/
 .idea/
 .DS_Store
+
+# Logs de execução
+logs/

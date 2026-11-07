@@ -14,13 +14,17 @@ O SDK do Gemini até faz esse loop sozinho, mas desligamos de propósito
 """
 
 import json
+import time
 
 from google import genai
 from google.genai import types
 
 from . import ferramentas
-from .config import obter_chave_gemini
+from .config import TIMEOUT_GEMINI_S, obter_chave_gemini
 from .ia import gerar_conteudo
+from .logs import obter_logger
+
+log = obter_logger()
 
 INSTRUCOES = """Você é a assistente virtual de atendimento e análise de uma loja de e-commerce brasileira.
 Responda sempre em português do Brasil, de forma cordial e objetiva.
@@ -39,7 +43,10 @@ MAX_PASSOS = 8  # trava de segurança para o agente não entrar em loop infinito
 
 class Agente:
     def __init__(self, cliente: genai.Client | None = None, verbose: bool = True):
-        self.cliente = cliente or genai.Client(api_key=obter_chave_gemini())
+        self.cliente = cliente or genai.Client(
+            api_key=obter_chave_gemini(),
+            http_options=types.HttpOptions(timeout=int(TIMEOUT_GEMINI_S * 1000)),  # em milissegundos
+        )
         self.verbose = verbose
         self.historico: list[types.Content] = []
         self.mapa_ferramentas = {f.__name__: f for f in ferramentas.TODAS}
@@ -64,6 +71,17 @@ class Agente:
             return {"erro": f"{type(e).__name__}: {e}"}
 
     def perguntar(self, mensagem: str) -> str:
+        inicio = time.perf_counter()
+        log.info(f"USER  | pergunta | {mensagem[:120]!r}")
+        try:
+            resposta = self._perguntar(mensagem)
+        finally:
+            log.info(f"TOTAL | pergunta respondida | {time.perf_counter() - inicio:.2f}s")
+        if self.verbose:
+            print(f"  ⏱️ total: {time.perf_counter() - inicio:.1f}s\n")
+        return resposta
+
+    def _perguntar(self, mensagem: str) -> str:
         tamanho_antes = len(self.historico)
         self.historico.append(types.Content(role="user", parts=[types.Part(text=mensagem)]))
 
@@ -85,7 +103,9 @@ class Agente:
             for chamada in chamadas:
                 args = dict(chamada.args or {})
                 self._log(f"  🔧 passo {passo}: {chamada.name}({json.dumps(args, ensure_ascii=False)})")
+                t = time.perf_counter()
                 resultado = self._executar(chamada.name, args)
+                log.info(f"TOOL  | {chamada.name} | {time.perf_counter() - t:.2f}s | {json.dumps(args, ensure_ascii=False)}")
                 partes.append(types.Part.from_function_response(name=chamada.name, response={"resultado": resultado}))
             self.historico.append(types.Content(role="user", parts=partes))
 

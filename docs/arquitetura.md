@@ -57,6 +57,10 @@ derrubar o programa — assim ela pode pedir o dado correto ao usuário.
 - **Resiliência (`ia.py`)**: erros temporários da API (503 sobrecarga, 429 limite) são
   repetidos com espera crescente (*backoff exponencial*) e, se persistirem, o agente troca
   para um modelo reserva. Erros definitivos (ex.: chave inválida) não são repetidos.
+- **Tempo limite (`GEMINI_TIMEOUT_S`, padrão 45s)**: em alta demanda o servidor pode segurar a
+  requisição por minutos; cortamos e tentamos de novo.
+- **Log (`logs.py`)**: cada chamada à IA e ferramenta é cronometrada em `logs/agente.log`;
+  `resumo_tempos()` mostra onde o tempo foi gasto.
 - **Mock da IA nos testes**: testes determinísticos, rápidos e gratuitos.
 
 ## 5. Hipóteses para investigar nos dados reais
